@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>E(n) Equivariant Graph Neural Networks</title>
+    <link href="/2023/10/12/E-n-Equivariant-Graph-Neural-Networks/"/>
+    <url>/2023/10/12/E-n-Equivariant-Graph-Neural-Networks/</url>
+    
+    <content type="html"><![CDATA[<h1 id="EGNN"><a href="#EGNN" class="headerlink" title="EGNN"></a>EGNN</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p><strong>features</strong></p><ul><li>equivariant to <strong>rotations, translations, reflections, permulations</strong></li><li>does not require computationally expensive higher-order representations</li><li>can be easily scaled to higher-dimensional spaces</li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>EGNN</tag>
+      
+      <tag>Equivariant</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>blog-build-remark</title>
     <link href="/2023/10/12/blog-build-remark/"/>
     <url>/2023/10/12/blog-build-remark/</url>
