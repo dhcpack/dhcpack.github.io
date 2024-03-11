@@ -16,13 +16,15 @@
   <meta name="author" content="Yuelin Zhang">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="Learn wandb 1. 搭建环境 pip install wandb &amp;&amp; wandb login 使用wandb.init()初始化W&amp;B，常用的参数： 12345678910wandb.init( config&#x3D;all_args,  # 所有配置            project&#x3D;all_args.project_name,  # 项目名，会在wandb中创建">
+<meta property="og:type" content="article">
 <meta property="og:title" content="wandb">
 <meta property="og:url" content="https://dhcpack.github.io/2024/03/10/wandb/index.html">
 <meta property="og:site_name" content="Yuelin&#39;s Blog">
+<meta property="og:description" content="Learn wandb 1. 搭建环境 pip install wandb &amp;&amp; wandb login 使用wandb.init()初始化W&amp;B，常用的参数： 12345678910wandb.init( config&#x3D;all_args,  # 所有配置            project&#x3D;all_args.project_name,  # 项目名，会在wandb中创建">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-10T10:35:11.000Z">
-<meta property="article:modified_time" content="2024-03-10T10:35:34.337Z">
+<meta property="article:modified_time" content="2024-03-11T08:12:21.161Z">
 <meta property="article:author" content="Yuelin Zhang">
 <meta property="article:tag" content="AI Tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -248,7 +250,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          0 字
+          2.9k 字
         
       </span>
     
@@ -260,7 +262,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          24 分钟
         
       </span>
     
@@ -310,7 +312,46 @@
             
               <div class="markdown-body">
                 
-                
+                <h2 id="learn-wandb">Learn wandb</h2>
+<p><strong>1. 搭建环境</strong></p>
+<p><code>pip install wandb</code> &amp;&amp;
+<code>wandb login</code></p>
+<p>使用<a
+target="_blank" rel="noopener" href="https://docs.wandb.ai/ref/python/init"><code>wandb.init()</code></a>初始化W&amp;B，常用的参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">wandb.init( config=all_args,  <span class="hljs-comment"># 所有配置</span><br>            project=all_args.project_name,  <span class="hljs-comment"># 项目名，会在wandb中创建一个项目</span><br>            entity=all_args.team_name,  <span class="hljs-comment"># 实体名，可以是自己的用户名，或者所在组织的名字</span><br>            notes=socket.gethostname(),  <span class="hljs-comment"># 对实验的长的描述</span><br>            name=all_args.experiment_name+<span class="hljs-string">&quot;_&quot;</span>+<span class="hljs-built_in">str</span>(all_args.seed),  <span class="hljs-comment"># 实验名</span><br>            group=all_args.scenario_name,  <span class="hljs-comment"># 类别名，可以是该模型的不同数据集的名字</span><br>            <span class="hljs-built_in">dir</span>=<span class="hljs-built_in">str</span>(run_dir),  <span class="hljs-comment"># 工作目录</span><br>            save_code=<span class="hljs-literal">True</span>, <span class="hljs-comment"># 是否保存代码</span><br>            reinit=<span class="hljs-literal">True</span>  <span class="hljs-comment"># 是否允许多次执行wandb.init()</span><br>          )<br></code></pre></td></tr></table></figure>
+<p>退出程序时运行<code>wandb.finish()</code></p>
+<p><strong>2. 可视化Loss曲线</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">epochs = <span class="hljs-number">1000</span><br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, epochs + <span class="hljs-number">1</span>):<br>    wandb.log(&#123;<span class="hljs-string">&#x27;random_curve&#x27;</span>: epoch / <span class="hljs-number">100</span> + random.random()&#125;, step=epoch)  <span class="hljs-comment"># 需要指定step，否则wandb按照调用递增标号</span><br>    wandb.log(&#123;<span class="hljs-string">&#x27;log_curve&#x27;</span>: math.log(epoch + <span class="hljs-number">1</span>)&#125;, step=epoch)<br>wandb.finish()<br></code></pre></td></tr></table></figure>
+<p>for more: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/493093033">wandb
+basic(zhihu)</a></p>
+<p><strong>3. 超参搜索</strong></p>
+<p>3.1 配置环境</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">os.environ[<span class="hljs-string">&quot;WANDB_ENTITY&quot;</span>] = args.entity_name<br>os.environ[<span class="hljs-string">&quot;WANDB_PROJECT&quot;</span>] = args.project_name<br>os.environ[<span class="hljs-string">&quot;WANDB_DIR&quot;</span>] = <span class="hljs-built_in">str</span>(run_dir)<br>os.environ[<span class="hljs-string">&quot;WANDB_GROUP&quot;</span>] = args.group<br>os.environ[<span class="hljs-string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="hljs-string">&#x27;0, 1&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>3.2 配置搜索空间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python">sweep_config = &#123;<br>    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;sweep_ab&quot;</span>,<br>    <span class="hljs-string">&quot;metric&quot;</span>: &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;accuracy&quot;</span>, <span class="hljs-string">&quot;goal&quot;</span>: <span class="hljs-string">&quot;maximize&quot;</span>&#125;,<br>    <span class="hljs-string">&quot;method&quot;</span>: <span class="hljs-string">&quot;grid&quot;</span>,<br>    <span class="hljs-string">&quot;parameters&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;a&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;values&quot;</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]<br>        &#125;,<br>        <span class="hljs-string">&quot;b&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;min&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;max&quot;</span>: <span class="hljs-number">8</span><br>        &#125;<br>    &#125;,<br>    <span class="hljs-string">&quot;early_terminate&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;hyperband&quot;</span>,  <span class="hljs-comment"># min_iter, min_iter * eta, min_iter * eta * eta ...</span><br>        <span class="hljs-string">&quot;eta&quot;</span>: <span class="hljs-number">2</span>,<br>        <span class="hljs-string">&quot;min_iter&quot;</span>: <span class="hljs-number">3</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>不参与搜索的超参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">hyperparameter_defaults = <span class="hljs-built_in">dict</span>(<br>    dropout = <span class="hljs-number">0.5</span>,<br>    channels_one = <span class="hljs-number">16</span>,<br>    channels_two = <span class="hljs-number">32</span>,<br>    batch_size = <span class="hljs-number">100</span>,<br>    learning_rate = <span class="hljs-number">0.001</span>,<br>    epochs = <span class="hljs-number">2</span>,<br>    )<br></code></pre></td></tr></table></figure>
+<p>在<code>train</code>函数中，在执行<code>wandb.init()</code>之后，可以直接通过<code>wandb.config.parameter</code>调用</p>
+<p>3.3 train函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train</span>():<br>    wandb.init()<br>    a, b = wandb.config.a, wandb.config.b<br><br>    epochs = <span class="hljs-number">1000</span><br>    <span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, epochs + <span class="hljs-number">1</span>):<br>        accuracy = math.log(epoch + <span class="hljs-number">1</span>) + b * math.log(a)<br>        wandb.log(&#123;<span class="hljs-string">&quot;a&quot;</span>: a, <span class="hljs-string">&quot;b&quot;</span>: b, <span class="hljs-string">&quot;accuracy&quot;</span>: accuracy&#125;)<br><br>    wandb.finish()<br></code></pre></td></tr></table></figure>
+<p>3.4 初始化sweep</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">sweep_id = wandb.sweep(sweep_config, entity=args.entity_name, project=args.project_name)<br></code></pre></td></tr></table></figure>
+<p>会得到一个sweep_id</p>
+<p>3.5 新建agent执行sweep</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">wandb.agent(sweep_id, train)<br></code></pre></td></tr></table></figure>
+<p>3.6 并行执行</p>
+<p>在一个新的终端中执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">wandb.agent(sweep_id, train)<br></code></pre></td></tr></table></figure>
+<p><code>sweep_id</code>需要是初始化sweep时候生成的，确保3.1中的环境被合理的配置，可以更改CUDA。</p>
+<p><strong>4. 存储文件</strong></p>
+<p>新建Artifact类，类似数据库的功能，用来保存数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">your_artifact = wandb.Artifact(<br>    <span class="hljs-string">&quot;mnist-origin&quot;</span>, <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;dataset&quot;</span>,<br>    description=<span class="hljs-string">&quot;Raw MNIST dataset, split into train/val/test&quot;</span>,<br>    metadata=&#123;<span class="hljs-string">&quot;source&quot;</span>: <span class="hljs-string">&quot;torchvision.datasets.MNIST&quot;</span>&#125;)<br></code></pre></td></tr></table></figure>
+<p>将数据存入文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">with</span> your_artifact.new_file(<span class="hljs-string">&quot;training.pt&quot;</span>, mode=<span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> file:<br>    save_func(your_data, file)  <span class="hljs-comment"># save_func是一个将数据存入文件的函数，如torch.load()等</span><br></code></pre></td></tr></table></figure>
+<p>上传文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">run = wand.init(xxx)<br>run.log_artifact(your_artifact)<br></code></pre></td></tr></table></figure>
+<p>下载文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">raw_data_artifact = run.use_artifact(<span class="hljs-string">&#x27;mnist-origin:latest&#x27;</span>)<br>raw_dataset = raw_data_artifact.download()<br></code></pre></td></tr></table></figure>
 
                 
               </div>
