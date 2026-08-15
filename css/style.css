@@ -11,6 +11,32 @@ td > img {
     width: 250px;
 }
 
+.internship-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.internship-logo-wrap {
+    width: 92px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 92px;
+}
+
+.internship-logo {
+    max-width: 92px;
+    max-height: 42px;
+    object-fit: contain;
+}
+
+.internship-logo-wide {
+    max-height: 30px;
+}
+
 @media (max-width:760px) {
     td > img {
         display: none;
@@ -22,5 +48,25 @@ td > img {
     }
     .tdcontent {
         width: 100%;
+    }
+
+    .internship-item {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .internship-logo-wrap {
+        width: 76px;
+        height: 34px;
+        flex-basis: 76px;
+    }
+
+    .internship-logo {
+        max-width: 76px;
+        max-height: 34px;
+    }
+
+    .internship-logo-wide {
+        max-height: 24px;
     }
 }
